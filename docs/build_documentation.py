@@ -1,7 +1,7 @@
 """Builds Documentation.pdf (2 pages) for the FixIt semester project.
 
 Run from the project folder:  python docs/build_documentation.py
-Edit AUTHOR below before submitting.
+Author: Danial Umer.
 """
 from pathlib import Path
 
@@ -13,7 +13,7 @@ from reportlab.lib.units import cm
 from reportlab.platypus import (Image, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table,
                                 TableStyle)
 
-AUTHOR = "Your Name"  # <-- put your name here
+AUTHOR = "Danial Umer"
 
 ROOT = Path(__file__).resolve().parent.parent
 SHOTS = ROOT / "Screenshots"
