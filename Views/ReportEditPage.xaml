@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FixIt.Views.ReportEditPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FixIt.ViewModels"
+             x:DataType="vm:ReportEditViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView>
+            <VerticalStackLayout Padding="16,12,16,24" Spacing="10">
+
+                <!-- Title -->
+                <Label Text="What's the problem?" Style="{StaticResource SectionHeader}" />
+                <Border Style="{StaticResource InputCard}">
+                    <Entry Text="{Binding ReportTitle}"
+                           Placeholder="e.g. Deep pothole in front of the bakery"
+                           MaxLength="100"
+                           ReturnType="Next" />
+                </Border>
+
+                <!-- Category + severity -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="6">
+                        <Label Text="Category" Style="{StaticResource SectionHeader}" />
+                        <Border Style="{StaticResource InputCard}">
+                            <Picker Title="Category"
+                                    ItemsSource="{Binding Categories}"
+                                    SelectedItem="{Binding SelectedCategory}" />
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="6">
+                        <Label Text="Severity" Style="{StaticResource SectionHeader}" />
+                        <Border Style="{StaticResource InputCard}">
+                            <Picker Title="Severity"
+                                    ItemsSource="{Binding Severities}"
+                                    SelectedItem="{Binding SelectedSeverity}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Status (only when editing) -->
+                <VerticalStackLayout Spacing="6" IsVisible="{Binding IsEditMode}">
+                    <Label Text="Status" Style="{StaticResource SectionHeader}" />
+                    <Border Style="{StaticResource InputCard}">
+                        <Picker Title="Status"
+                                ItemsSource="{Binding Statuses}"
+                                SelectedItem="{Binding SelectedStatus}" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Description -->
+                <Label Text="Details" Style="{StaticResource SectionHeader}" />
+                <Border Style="{StaticResource InputCard}">
+                    <Editor Text="{Binding Description}"
+                            Placeholder="Describe the issue: size, how long it's been there, any danger…"
+                            AutoSize="TextChanges"
+                            MinimumHeightRequest="110"
+                            MaxLength="1000" />
+                </Border>
+
+                <!-- Camera -->
+                <Label Text="Photo" Style="{StaticResource SectionHeader}" />
+                <Border Style="{StaticResource Card}" Padding="0" IsVisible="{Binding HasPhoto}">
+                    <Grid>
+                        <Image Source="{Binding PhotoPath}" Aspect="AspectFill" HeightRequest="220" />
+                        <Button Text="✕"
+                                Command="{Binding RemovePhotoCommand}"
+                                BackgroundColor="#99000000"
+                                TextColor="White"
+                                WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0"
+                                MinimumHeightRequest="40"
+                                HorizontalOptions="End" VerticalOptions="Start" Margin="8"
+                                SemanticProperties.Description="Remove photo" />
+                    </Grid>
+                </Border>
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Button Grid.Column="0" Text="📷  Take photo" Style="{StaticResource SecondaryButton}" Command="{Binding TakePhotoCommand}" />
+                    <Button Grid.Column="1" Text="🖼️  Gallery" Style="{StaticResource SecondaryButton}" Command="{Binding PickPhotoCommand}" />
+                </Grid>
+
+                <!-- Geolocation -->
+                <Label Text="Location" Style="{StaticResource SectionHeader}" />
+                <Border Style="{StaticResource Card}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <Label Text="📍" FontSize="22" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding LocationText}" VerticalOptions="Center" />
+                        <Button Grid.Column="2" Text="Clear" Style="{StaticResource TextButton}"
+                                IsVisible="{Binding HasLocation}"
+                                Command="{Binding ClearLocationCommand}" />
+                    </Grid>
+                </Border>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <Button Text="🛰️  Use my current location"
+                            Style="{StaticResource SecondaryButton}"
+                            Command="{Binding GetLocationCommand}"
+                            IsEnabled="{Binding IsLocating, Converter={StaticResource InverseBool}}" />
+                    <ActivityIndicator Grid.Column="1" IsRunning="{Binding IsLocating}" IsVisible="{Binding IsLocating}"
+                                       WidthRequest="28" HeightRequest="28" />
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Actions -->
+        <Border Grid.Row="1" StrokeThickness="0" Padding="16,10"
+                BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+            <VerticalStackLayout Spacing="8">
+                <!-- Validation (next to the button, so it's always visible) -->
+                <Label Text="{Binding ValidationMessage}"
+                       TextColor="{StaticResource Danger}"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ValidationMessage, Converter={StaticResource IsNotNullOrEmpty}}" />
+                <Grid ColumnDefinitions="*,2*" ColumnSpacing="12">
+                    <Button Grid.Column="0" Text="Cancel" Style="{StaticResource SecondaryButton}" Command="{Binding CancelCommand}" />
+                    <Button Grid.Column="1" Text="{Binding SaveButtonText}" Command="{Binding SaveCommand}" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

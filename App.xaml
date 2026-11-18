@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application x:Class="FixIt.App"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:FixIt.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Value converters used across the app -->
+            <conv:StatusToColorConverter x:Key="StatusToColor" />
+            <conv:StatusToTextConverter x:Key="StatusToText" />
+            <conv:CategoryToIconConverter x:Key="CategoryToIcon" />
+            <conv:CategoryToTextConverter x:Key="CategoryToText" />
+            <conv:SeverityToTextConverter x:Key="SeverityToText" />
+            <conv:RelativeTimeConverter x:Key="RelativeTime" />
+            <conv:InverseBoolConverter x:Key="InverseBool" />
+            <conv:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmpty" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

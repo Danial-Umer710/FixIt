@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FixIt.Views.MapPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FixIt.ViewModels"
+             x:DataType="vm:MapViewModel"
+             Title="Issue map">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Network connectivity -->
+        <Border Grid.Row="0" Style="{StaticResource OfflineBanner}" IsVisible="{Binding IsOffline}">
+            <Label Text="📴  Offline: the map needs internet to load. Your reports are still saved on this device."
+                   TextColor="White" FontSize="13" />
+        </Border>
+
+        <!-- Leaflet / OpenStreetMap map -->
+        <WebView Grid.Row="1"
+                 Source="{Binding MapSource}"
+                 Navigating="OnMapNavigating" />
+
+        <!-- Legend -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Padding="12,10"
+                HorizontalOptions="Start" VerticalOptions="Start" Margin="12,12,0,0">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding MapSummary}" FontSize="13" FontAttributes="Bold" />
+                <HorizontalStackLayout Spacing="12">
+                    <HorizontalStackLayout Spacing="4">
+                        <Ellipse Fill="{StaticResource StatusOpen}" WidthRequest="10" HeightRequest="10" VerticalOptions="Center" />
+                        <Label Text="Open" Style="{StaticResource Caption}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="4">
+                        <Ellipse Fill="{StaticResource StatusInProgress}" WidthRequest="10" HeightRequest="10" VerticalOptions="Center" />
+                        <Label Text="In progress" Style="{StaticResource Caption}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="4">
+                        <Ellipse Fill="{StaticResource StatusFixed}" WidthRequest="10" HeightRequest="10" VerticalOptions="Center" />
+                        <Label Text="Fixed" Style="{StaticResource Caption}" />
+                    </HorizontalStackLayout>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- My location -->
+        <Grid Grid.Row="1" HorizontalOptions="End" VerticalOptions="End" Margin="0,0,16,36">
+            <Button Text="📍"
+                    Style="{StaticResource FabButton}"
+                    FontSize="24"
+                    SemanticProperties.Description="Show my location"
+                    Command="{Binding ShowMyLocationCommand}"
+                    IsEnabled="{Binding IsLocating, Converter={StaticResource InverseBool}}" />
+            <ActivityIndicator IsRunning="{Binding IsLocating}" IsVisible="{Binding IsLocating}"
+                               Color="White" WidthRequest="30" HeightRequest="30"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <!-- Traffic cone -->
+    <path d="M228 120 L292 318 H164 Z" fill="#FFFFFF" />
+    <path d="M206 188 H250 L260 220 H196 Z" fill="#E8590C" />
+    <path d="M187 248 H269 L279 280 H177 Z" fill="#E8590C" />
+    <rect x="140" y="318" width="176" height="22" rx="8" fill="#FFFFFF" />
+</svg>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="FixIt.Views.ReportDetailPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FixIt.ViewModels"
+             xmlns:models="clr-namespace:FixIt.Models"
+             x:DataType="vm:ReportDetailViewModel"
+             Title="Report">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Share" Command="{Binding ShareCommand}" />
+        <ToolbarItem Text="Edit" Command="{Binding EditCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="14" Padding="0,0,0,24">
+
+            <!-- Photo / placeholder -->
+            <Grid HeightRequest="240">
+                <Grid BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}"
+                      IsVisible="{Binding HasPhoto, Converter={StaticResource InverseBool}}">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="4">
+                        <Label Text="{Binding Report.Category, Converter={StaticResource CategoryToIcon}}" FontSize="56" HorizontalOptions="Center" />
+                        <Label Text="No photo attached" Style="{StaticResource Caption}" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+                <Image Source="{Binding Report.PhotoPath}" Aspect="AspectFill" IsVisible="{Binding HasPhoto}" />
+            </Grid>
+
+            <!-- Title + tags -->
+            <VerticalStackLayout Padding="16,0" Spacing="8">
+                <Label Text="{Binding Report.Title}" Style="{StaticResource PageTitle}" />
+                <HorizontalStackLayout Spacing="8">
+                    <Border Style="{StaticResource Pill}" BackgroundColor="{Binding Report.Status, Converter={StaticResource StatusToColor}}">
+                        <Label Text="{Binding Report.Status, Converter={StaticResource StatusToText}}" TextColor="White" FontSize="12" FontAttributes="Bold" />
+                    </Border>
+                    <Border Style="{StaticResource Pill}" BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}">
+                        <Label Text="{Binding Report.Category, Converter={StaticResource CategoryToText}}" FontSize="12" />
+                    </Border>
+                    <Border Style="{StaticResource Pill}" BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}">
+                        <Label Text="{Binding Report.Severity, Converter={StaticResource SeverityToText}}" FontSize="12" />
+                    </Border>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Description -->
+            <Border Style="{StaticResource Card}" Margin="16,0" IsVisible="{Binding HasDescription}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Details" Style="{StaticResource SectionHeader}" Margin="0" />
+                    <Label Text="{Binding Report.Description}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Location -->
+            <Border Style="{StaticResource Card}" Margin="16,0">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Location" Style="{StaticResource SectionHeader}" Margin="0" />
+                    <Label Text="{Binding Report.LocationSummary}" />
+                    <Label Text="{Binding Report.Coordinates}" Style="{StaticResource Caption}" IsVisible="{Binding HasLocation}" />
+                    <Button Text="🗺️  Open in Maps" Style="{StaticResource SecondaryButton}"
+                            Command="{Binding OpenInMapsCommand}" IsVisible="{Binding HasLocation}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Status workflow -->
+            <Border Style="{StaticResource Card}" Margin="16,0">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Update status" Style="{StaticResource SectionHeader}" Margin="0" />
+                    <Button Text="🔧  Mark as in progress"
+                            BackgroundColor="{StaticResource StatusInProgress}"
+                            IsVisible="{Binding CanMarkInProgress}"
+                            Command="{Binding SetStatusCommand}"
+                            CommandParameter="{x:Static models:IssueStatus.InProgress}" />
+                    <Button Text="✅  Mark as fixed"
+                            BackgroundColor="{StaticResource StatusFixed}"
+                            IsVisible="{Binding CanMarkFixed}"
+                            Command="{Binding SetStatusCommand}"
+                            CommandParameter="{x:Static models:IssueStatus.Fixed}" />
+                    <Button Text="↩️  Reopen"
+                            BackgroundColor="{StaticResource StatusOpen}"
+                            IsVisible="{Binding CanReopen}"
+                            Command="{Binding SetStatusCommand}"
+                            CommandParameter="{x:Static models:IssueStatus.Open}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Timestamps -->
+            <VerticalStackLayout Padding="16,0" Spacing="2">
+                <Label Text="{Binding Report.CreatedAt, StringFormat='Reported {0:dd MMM yyyy, HH:mm}'}" Style="{StaticResource Caption}" />
+                <Label Text="{Binding Report.UpdatedAt, StringFormat='Last updated {0:dd MMM yyyy, HH:mm}'}" Style="{StaticResource Caption}" />
+            </VerticalStackLayout>
+
+            <!-- Actions -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Padding="16,4">
+                <Button Grid.Column="0" Text="📤  Share" Style="{StaticResource SecondaryButton}" Command="{Binding ShareCommand}" />
+                <Button Grid.Column="1" Text="✏️  Edit" Command="{Binding EditCommand}" />
+            </Grid>
+            <Button Text="🗑️  Delete report" Style="{StaticResource DangerButton}" Margin="16,0"
+                    Command="{Binding DeleteCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
